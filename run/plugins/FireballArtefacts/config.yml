@@ -1,0 +1,124 @@
+storage:
+  prefix: artefacts
+  url: jdbc:mysql://localhost:3306/mydb?user=karol&password=123
+traderCraftingScheme:
+  5:
+    material: REDSTONE_BLOCK
+  6:
+    material: GOLD_BLOCK
+  7:
+    material: ENDER_PEARL
+  8:
+    material: EMERALD_BLOCK
+  9:
+    material: ENDER_PEARL
+  1:
+    material: ENDER_PEARL
+  2:
+    material: ENDER_EYE
+  3:
+    material: ENDER_PEARL
+  4:
+    material: DIAMOND_BLOCK
+traderItem:
+  customModelData: 0
+  material: EMERALD
+  name: '&a&lTrader'
+  lore:
+  - '&7Click to reroll artefact'
+  flags:
+  - HIDE_ATTRIBUTES
+upgraderCraftingScheme:
+  5:
+    material: NETHER_STAR
+  6:
+    material: DRAGON_BREATH
+  7:
+    material: DIAMOND_BLOCK
+  8:
+    material: DRAGON_BREATH
+  9:
+    material: DIAMOND_BLOCK
+  1:
+    material: NETHERITE_INGOT
+  2:
+    material: DRAGON_BREATH
+  3:
+    material: NETHERITE_INGOT
+  4:
+    material: DRAGON_BREATH
+upgraderItem:
+  customModelData: 0
+  material: EMERALD
+  name: '&a&lUpgrader'
+  lore:
+  - '&7Click to upgrade artefact'
+  flags:
+  - HIDE_ATTRIBUTES
+oceanArtefactConfig:
+  abilityCooldown: 45s
+  abilityRadius: 6.0
+  damage: 6.0
+  pushForce: 1.25
+  # All settings below are for the upgraded ability
+  upgradedAbilityCooldown: 1m
+  landDamage: 8.0
+  waterDamage: 14.0
+  upgradedEffectRadius: 4.0
+fireArtefactConfig:
+  abilityCooldown: 45s
+  abilityRadius: 3.0
+  # How long the fire will last on the targets (in ticks, 20 ticks = 1 second)
+  abilityFireTicks: 200
+  upgradedAbilityCooldown: 1m30s
+  upgradedAbilityChargingDuration: 10s
+  # 12 is 6 hearts
+  fireballDamage: 12.0
+thunderArtefactConfig:
+  abilityCooldown: 45s
+  abilityRadius: 5.0
+  abilityDelayBetween: 1s
+  abilityTimes: 5
+earthArtefactConfig:
+  abilityCooldown: 45s
+  abilityRadius: 5.0
+  upgradedAbilityCooldown: 1m30s
+  upgradedAbilityRadius: 5.0
+  damage: 5.0
+airArtefactConfig:
+  abilityCooldown: 45s
+  dashDistance: 25.0
+  # 4.0 is 2 hearts
+  dashDamage: 4.0
+  # Options below are for the upgraded ability
+  upgradedAbilityCooldown: 1m30s
+  upgradedAbilityRadius: 15.0
+  upgradedDashDistance: 8.0
+  singleDashDamage: 3.0
+  groundPoundDamage: 3.0
+  groundPoundRadius: 5.0
+iceArtefactConfig:
+  abilityCooldown: 45s
+  spikeDamage: 5.0
+  spikeCount: 5
+  abilityRadius: 5.0
+  upgradedAbilityCooldown: 1m30s
+  upgradedAbilityRadius: 5.0
+  # Duration in seconds for which players are frozen
+  freezeDuration: 5
+sculkArtefactConfig:
+  abilityCooldown: 45s
+  abilityRadius: 5.0
+  abilityDamage: 10.0
+  upgradedAbilityCooldown: 1m30s
+strengthArtefactConfig:
+  abilityCooldown: 45s
+  upgradedAbilityCooldown: 1m30s
+  upgradedAbilityWindow: 15s
+  maxHits: 10
+  perHitBuffDuration: 3s
+luckArtefactConfig:
+  abilityCooldown: 45s
+  upgradedAbilityCooldown: 1m30s
+  upgradedAbilityRadius: 5.0
+  upgradedAbilityEffectDuration: 30s

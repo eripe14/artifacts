@@ -1,0 +1,50 @@
+invalidUsage: '&4Wrong command usage &8>> &7{COMMAND}.'
+invalidUsageHeader: '&cWrong command usage!'
+invalidUsageEntry: '&8 >> &7{SCHEME}'
+noPermission: '&4You do not have permission to use this command!'
+cantFindPlayer: '&4Can not find that player!'
+onlyForPlayer: '&4Command only for players!'
+oceanAbility:
+  actionbar: <gradient:#ffffff:#0029ff>You have used ocean ability affecting {affected}!</gradient>
+thunderAbility:
+  actionbar: '&eYou have used thunder ability affecting &9{affected}&e!'
+fireAbility:
+  actionbar: '&eYou have used fire ability affecting &9{affected}&e!'
+upgradedFireAbility:
+  actionbar: '&eYou have used upgraded fire ability!'
+earthAbility:
+  actionbar: '&eYou have used earth ability affecting &9{affected}&e!'
+earthUpgradedAbility:
+  actionbar: <gradient:#4affff:#4aff00>You have used upgraded earth ability affecting
+    {affected}!</gradient>
+playerDashedThrough: '&ePlayer &9{player} &edashed through you!'
+airAbility:
+  actionbar: <gradient:#ffffff:#00ffff>You dash forward {distance} blocks and hitting
+    {targets} players!</gradient>
+noTargetsForUpgradedAirAbility: '&cNo targets found for advanced dash!'
+airAbilitySlamDown: '&9{player} &eslams down with tremendous force!'
+iceAbility:
+  actionbar: <gradient:#ffffff:#00ffff>You have used ice ability affecting {affected}!</gradient>
+iceUpgradedAbility:
+  actionbar: <gradient:#ffffff:#00ffff>You have used upgraded ice ability affecting
+    {affected}!</gradient>
+sculkAbility:
+  actionbar: <gradient:#ffffff:#3c0065>You have used sculk ability affecting {affected}!</gradient>
+sculkDomainCreated:
+  actionbar: <gradient:#ffffff:#3c0065>You have created a sculk domain!</gradient>
+lifeAbility:
+  actionbar: <gradient:#ffffff:#d33c57>You have used life ability healing yourself!</gradient>
+lifeUpgradedAbility:
+  actionbar: <gradient:#ffffff:#d33c57>You have used life ability affecting {affected}!</gradient>
+strengthAbility:
+  actionbar: <gradient:#ffffff:#380080>You have used stength abiltiy!</gradient>
+upgradedStrengthAbility:
+  actionbar: <gradient:#ffffff:#380080>You have used upgraded strength ability!</gradient>
+luckAbility:
+  actionbar: <gradient:#ffffff:#00ff00>You have used luck ability giving you {effect}
+    effect!</gradient>
+upgradedLuckAbility:
+  actionbar: <gradient:#ffffff:#00ff00>You have used upgraded luck ability affecting
+    {affected}!</gradient>
+artefactNotFound: '&cCannot find artefact with this id!'
+artefactSet: '&aYou have set &e{id} artefact &ato player &e{player}&a!'
