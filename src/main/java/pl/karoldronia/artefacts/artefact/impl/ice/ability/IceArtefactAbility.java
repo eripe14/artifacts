@@ -34,6 +34,11 @@ public class IceArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "ice";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         player.getWorld().playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 2.0f, 0.5f);
         player.getWorld().spawnParticle(Particle.SNOWFLAKE, player.getLocation().add(0, 1, 0), 50, 2, 2, 2, 0.1);
@@ -86,7 +91,6 @@ public class IceArtefactAbility implements Ability {
                     createIceSpike(currentLoc);
 
                     for (Player target : targetsCopy) {
-                        System.out.println(target.getName());
                         if (target.getLocation().distance(currentLoc) < 1.5) {
                             // Launch player 15 blocks up with strong velocity
                             Vector launchVector = new Vector(0, 1.5, 0); // Strong upward velocity for 15 blocks

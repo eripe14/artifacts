@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import pl.karoldronia.artefacts.artefact.ArtefactService;
 import pl.karoldronia.artefacts.artefact.ability.Ability;
 import pl.karoldronia.artefacts.artefact.ability.AbilityResult;
 import pl.karoldronia.artefacts.artefact.impl.strength.StrengthArtefactConfig;
@@ -26,14 +27,16 @@ import java.util.concurrent.TimeUnit;
 public class StrengthArtefactUpgradedAbility implements Ability, Listener {
 
     private final Plugin plugin;
+    private final ArtefactService artefactService;
     private final StrengthArtefactConfig artefactConfig;
     private final NoticeService noticeService;
 
     private final Map<UUID, Boolean> activeWindows;
     private final Map<UUID, Integer> hitsCount;
 
-    public StrengthArtefactUpgradedAbility(Plugin plugin, StrengthArtefactConfig artefactConfig, NoticeService noticeService) {
+    public StrengthArtefactUpgradedAbility(Plugin plugin, ArtefactService artefactService, StrengthArtefactConfig artefactConfig, NoticeService noticeService) {
         this.plugin = plugin;
+        this.artefactService = artefactService;
         this.artefactConfig = artefactConfig;
         this.noticeService = noticeService;
 
@@ -47,7 +50,14 @@ public class StrengthArtefactUpgradedAbility implements Ability, Listener {
                 .expirationPolicy(ExpirationPolicy.CREATED)
                 .build();
 
-        this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+        if (this.plugin.isEnabled()) {
+            this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+        }
+    }
+
+    @Override
+    public String getId() {
+        return "strength-upgraded";
     }
 
     @Override
@@ -56,6 +66,11 @@ public class StrengthArtefactUpgradedAbility implements Ability, Listener {
 
         this.activeWindows.put(uniqueId, Boolean.TRUE);
         this.hitsCount.put(uniqueId, 0);
+
+        this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> {
+            String artefactId = profile.getArtefactId();
+            this.artefactService.findArtefact(artefactId).ifPresent(artefact -> artefact.givePassiveEffects(player));
+        }, this.artefactConfig.upgradedAbilityWindow.toMillis() / 50L);
 
         this.noticeService.create()
                 .notice(messages -> messages.upgradedStrengthAbility)
@@ -92,6 +107,7 @@ public class StrengthArtefactUpgradedAbility implements Ability, Listener {
         if (current >= this.artefactConfig.maxHits) return;
 
         int ticks = (int) Math.max(1, this.artefactConfig.perHitBuffDuration.toMillis() / 50L);
+        player.removePotionEffect(PotionEffectType.STRENGTH);
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.STRENGTH,
                 ticks,

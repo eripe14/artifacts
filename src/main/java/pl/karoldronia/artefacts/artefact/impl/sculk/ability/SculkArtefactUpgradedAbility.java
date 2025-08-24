@@ -4,9 +4,7 @@ import de.myzelyam.api.vanish.VanishAPI;
 import de.myzelyam.supervanish.visibility.VisibilityChanger;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -32,6 +30,11 @@ public class SculkArtefactUpgradedAbility implements Ability {
         this.artefactConfig = artefactConfig;
         this.plugin = plugin;
         this.noticeService = noticeService;
+    }
+
+    @Override
+    public String getId() {
+        return "sculk-upgraded";
     }
 
     @Override
@@ -73,6 +76,9 @@ public class SculkArtefactUpgradedAbility implements Ability {
         private BukkitTask domainTask;
         private boolean isActive = false;
 
+        private int invisTick = 0;
+        private boolean lastInvisible = false;
+
         public SculkDomain(Location center, Player owner) {
             this.center = center.clone();
             this.owner = owner;
@@ -86,9 +92,16 @@ public class SculkArtefactUpgradedAbility implements Ability {
 
         public void deactivate() {
             this.isActive = false;
-            if (domainTask != null) {
-                domainTask.cancel();
-            }
+            if (domainTask != null) domainTask.cancel();
+
+            // ZAWSZE PRZYWRÓĆ WIDOCZNOŚĆ
+            try {
+                if (owner.isOnline() && VanishAPI.isInvisible(owner)) {
+                    VanishAPI.getPlugin().getVisibilityChanger().showPlayer(owner, null, true);
+                    owner.removePotionEffect(PotionEffectType.NIGHT_VISION);
+                }
+            } catch (Throwable ignored) {
+            } // na wszelki wypadek, gdyby SV zniknął
 
             center.getWorld().playSound(center, Sound.ENTITY_WARDEN_DEATH, 1.5f, 0.8f);
             center.getWorld().spawnParticle(Particle.SONIC_BOOM, center, 50, 5, 2, 5, 0.2);
@@ -134,8 +147,6 @@ public class SculkArtefactUpgradedAbility implements Ability {
 
         private void startDomainEffects() {
             BukkitRunnable task = new BukkitRunnable() {
-                private int invisTick = 0;
-
                 @Override
                 public void run() {
                     if (!isActive) {
@@ -143,10 +154,9 @@ public class SculkArtefactUpgradedAbility implements Ability {
                         return;
                     }
 
+                    handleOwnerInvisibilityCycle();
                     List<Player> playersInDomain = getPlayersInDomain();
-
                     for (Player player : playersInDomain) {
-                        // Prevent escape - push back if trying to leave
                         if (isAtBoundary(player.getLocation())) {
                             Vector pushBack = center.toVector().subtract(player.getLocation().toVector()).normalize();
                             pushBack.setY(0);
@@ -155,32 +165,40 @@ public class SculkArtefactUpgradedAbility implements Ability {
 
                             player.getWorld().spawnParticle(
                                     Particle.BLOCK_MARKER,
-                                    player.getLocation().add(0, 1, 0), 5, 0.3, 0.3, 0.3, 0.1,
+                                    player.getLocation().add(0, 1, 0),
+                                    5, 0.3, 0.3, 0.3, 0.1,
                                     Bukkit.createBlockData(Material.BARRIER)
                             );
                         }
-
-                        // Owner invisibility cycle
-                        VisibilityChanger visibilityChanger = VanishAPI.getPlugin().getVisibilityChanger();
-                        if (player.equals(owner)) {
-                            if (invisTick % 60 < 40) { // 2 seconds invisible (40 ticks)
-                                if (!VanishAPI.isInvisible(owner)) {
-                                    VanishAPI.hidePlayer(owner);
-                                }
-                                return;
-                            }
-
-                            if (VanishAPI.isInvisible(owner)) {
-                                VanishAPI.showPlayer(owner);
-                            }
-                        }
                     }
-
-                    invisTick++;
                 }
             };
 
-            domainTask = task.runTaskTimer(plugin, 0L, 1L);
+            domainTask = task.runTaskTimer(plugin, 0L, 1L); // co tick
+        }
+
+        private void handleOwnerInvisibilityCycle() {
+            if (owner == null || !owner.isOnline()) return;
+
+            // 60 ticków = 3s: 0-39 (40 ticków = 2s) NIEWIDZIALNY, 40-59 (20 ticków = 1s) WIDOCZNY
+            int phase = invisTick % 60;
+            boolean shouldBeInvisible = (phase < 40);
+
+            if (shouldBeInvisible != lastInvisible) {
+                if (shouldBeInvisible) {
+                    if (!VanishAPI.isInvisible(owner)) {
+                        VanishAPI.getPlugin().getVisibilityChanger().hidePlayer(owner, null, true);
+                    }
+                } else {
+                    if (VanishAPI.isInvisible(owner)) {
+                        VanishAPI.getPlugin().getVisibilityChanger().showPlayer(owner, null, true);
+                    }
+                }
+
+                lastInvisible = shouldBeInvisible;
+            }
+
+            invisTick++;
         }
 
         private List<Player> getPlayersInDomain() {

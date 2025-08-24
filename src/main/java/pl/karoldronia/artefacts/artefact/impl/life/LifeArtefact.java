@@ -9,6 +9,7 @@ import pl.karoldronia.artefacts.artefact.Artefact;
 import pl.karoldronia.artefacts.artefact.ability.Ability;
 import pl.karoldronia.artefacts.artefact.impl.life.ability.LifeArtefactAbility;
 import pl.karoldronia.artefacts.artefact.impl.life.ability.LifeArtefactUpgradedAbility;
+import pl.karoldronia.artefacts.artefact.item.ArtefactItem;
 import pl.karoldronia.artefacts.notice.NoticeService;
 
 import java.util.List;
@@ -32,9 +33,12 @@ public class LifeArtefact implements Artefact {
     }
 
     @Override
-    public void givePassiveEffects(Player player) {
-        double baseHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(baseHealth + 8);
+    public ArtefactItem getArtefactItem() {
+        return this.artefactConfig.item;
+    }
+
+    @Override
+    public List<PotionEffectType> givePassiveEffects(Player player) {
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.HEALTH_BOOST,
                 Integer.MAX_VALUE,
@@ -43,6 +47,7 @@ public class LifeArtefact implements Artefact {
                 true,
                 true
         ));
+        return List.of(PotionEffectType.HEALTH_BOOST);
     }
 
     @Override

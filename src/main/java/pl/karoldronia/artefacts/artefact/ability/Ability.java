@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface Ability {
 
+    String getId();
+
     AbilityResult performAbility(Player player, Profile profile);
 
     Duration getCooldown();

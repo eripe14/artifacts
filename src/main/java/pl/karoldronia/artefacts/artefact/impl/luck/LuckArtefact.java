@@ -8,6 +8,7 @@ import pl.karoldronia.artefacts.artefact.Artefact;
 import pl.karoldronia.artefacts.artefact.ability.Ability;
 import pl.karoldronia.artefacts.artefact.impl.luck.ability.LuckArtefactAbility;
 import pl.karoldronia.artefacts.artefact.impl.luck.ability.LuckArtefactUpgradedAbility;
+import pl.karoldronia.artefacts.artefact.item.ArtefactItem;
 import pl.karoldronia.artefacts.notice.NoticeService;
 
 import java.util.List;
@@ -31,7 +32,12 @@ public class LuckArtefact implements Artefact {
     }
 
     @Override
-    public void givePassiveEffects(Player player) {
+    public ArtefactItem getArtefactItem() {
+        return this.artefactConfig.item;
+    }
+
+    @Override
+    public List<PotionEffectType> givePassiveEffects(Player player) {
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.HERO_OF_THE_VILLAGE,
                 Integer.MAX_VALUE,
@@ -48,6 +54,7 @@ public class LuckArtefact implements Artefact {
                 true,
                 true
         ));
+        return List.of(PotionEffectType.HERO_OF_THE_VILLAGE, PotionEffectType.LUCK);
     }
 
     @Override

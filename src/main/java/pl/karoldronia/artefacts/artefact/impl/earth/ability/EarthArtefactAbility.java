@@ -24,6 +24,11 @@ public class EarthArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "earth";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         List<Player> targets = this.getTargets(player, profile, this.artefactConfig.abilityRadius);
         for (Player target : targets) {

@@ -44,7 +44,14 @@ public class LifeArtefactUpgradedAbility implements Ability, Listener {
                 })
                 .build();
 
-        Bukkit.getPluginManager().registerEvents(this, this.plugin);
+        if (this.plugin.isEnabled()) {
+            Bukkit.getPluginManager().registerEvents(this, this.plugin);
+        }
+    }
+
+    @Override
+    public String getId() {
+        return "life-upgraded";
     }
 
     @Override

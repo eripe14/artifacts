@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
+import pl.karoldronia.artefacts.artefact.impl.dragon.DragonArtefact;
 import pl.karoldronia.artefacts.config.impl.PluginConfig;
 
 public class CraftingService {
@@ -16,18 +17,27 @@ public class CraftingService {
 
     private final Plugin plugin;
     private final PluginConfig pluginConfig;
+    private final NamespacedKey traderKey;
+    private final NamespacedKey upgraderKey;
+    private final NamespacedKey dragonArtefactKey;
 
     public CraftingService(Plugin plugin, PluginConfig pluginConfig) {
         this.plugin = plugin;
         this.pluginConfig = pluginConfig;
+        this.traderKey = new NamespacedKey(this.plugin, "trader_crafting");
+        this.upgraderKey = new NamespacedKey(this.plugin, "upgrader_crafting");
+        this.dragonArtefactKey = new NamespacedKey(this.plugin, "dragon_artefact_crafting");
+    }
+
+    public void unregister() {
+        this.plugin.getServer().removeRecipe(traderKey);
+        this.plugin.getServer().removeRecipe(upgraderKey);
+        this.plugin.getServer().removeRecipe(dragonArtefactKey);
     }
 
     public void register() {
-        NamespacedKey traderKey = new NamespacedKey(this.plugin, "trader_crafting");
-        NamespacedKey upgraderKey = new NamespacedKey(this.plugin, "upgrader_crafting");
-
-        ShapedRecipe traderRecipe = new ShapedRecipe(traderKey, this.getTraderItem());
-        traderRecipe.shape(
+        ShapedRecipe dragonArtefactRecipe = new ShapedRecipe(dragonArtefactKey, this.pluginConfig.dragonArtefactItem.build(DragonArtefact.ID));
+        dragonArtefactRecipe.shape(
                 "123",
                 "456",
                 "789"
@@ -36,6 +46,24 @@ public class CraftingService {
         // Mapowanie pozycji na znaki używane w shape
         String[] shapeLines = {"123", "456", "789"};
         int position = 1;
+        for (String line : shapeLines) {
+            for (char c : line.toCharArray()) {
+                CraftingIngredient craftingIngredient = this.pluginConfig.dragonArtefactScheme.get(position);
+                if (craftingIngredient != null) {
+                    dragonArtefactRecipe.setIngredient(c, craftingIngredient.getMaterial());
+                }
+                position++;
+            }
+        }
+
+        ShapedRecipe traderRecipe = new ShapedRecipe(traderKey, this.getTraderItem());
+        traderRecipe.shape(
+                "123",
+                "456",
+                "789"
+        );
+
+        position = 1;
         for (String line : shapeLines) {
             for (char c : line.toCharArray()) {
                 CraftingIngredient craftingIngredient = this.pluginConfig.traderCraftingScheme.get(position);
@@ -67,6 +95,7 @@ public class CraftingService {
 
         this.plugin.getServer().addRecipe(traderRecipe);
         this.plugin.getServer().addRecipe(upgraderRecipe);
+        this.plugin.getServer().addRecipe(dragonArtefactRecipe);
     }
 
     private ItemStack getTraderItem() {

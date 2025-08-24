@@ -8,6 +8,7 @@ import pl.karoldronia.artefacts.artefact.Artefact;
 import pl.karoldronia.artefacts.artefact.ability.Ability;
 import pl.karoldronia.artefacts.artefact.impl.earth.ability.EarthArtefactAbility;
 import pl.karoldronia.artefacts.artefact.impl.earth.ability.EarthArtefactUpgradedAbility;
+import pl.karoldronia.artefacts.artefact.item.ArtefactItem;
 import pl.karoldronia.artefacts.notice.NoticeService;
 
 import java.util.List;
@@ -31,7 +32,12 @@ public class EarthArtefact implements Artefact {
     }
 
     @Override
-    public void givePassiveEffects(Player player) {
+    public ArtefactItem getArtefactItem() {
+        return this.artefactConfig.item;
+    }
+
+    @Override
+    public List<PotionEffectType> givePassiveEffects(Player player) {
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.RESISTANCE,
                 Integer.MAX_VALUE,
@@ -40,6 +46,7 @@ public class EarthArtefact implements Artefact {
                 true,
                 true
         ));
+        return List.of(PotionEffectType.RESISTANCE);
     }
 
     @Override

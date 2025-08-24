@@ -29,6 +29,11 @@ public class ThunderArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "thunder";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         double abilityRadius = this.artefactConfig.abilityRadius;
         List<Player> nearbyTargets = this.getTargets(player, profile, abilityRadius);

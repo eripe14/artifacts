@@ -1,6 +1,33 @@
 storage:
   prefix: artefacts
   url: jdbc:mysql://localhost:3306/mydb?user=karol&password=123
+dragonArtefactScheme:
+  4:
+    material: NETHER_STAR
+  5:
+    material: DRAGON_BREATH
+  6:
+    material: NETHER_STAR
+  7:
+    material: DRAGON_EGG
+  8:
+    material: DRAGON_BREATH
+  9:
+    material: DRAGON_EGG
+  1:
+    material: DRAGON_EGG
+  2:
+    material: DRAGON_BREATH
+  3:
+    material: DRAGON_EGG
+dragonArtefactItem:
+  customModelData: 0
+  material: DRAGON_EGG
+  name: '&6&lDragon artefact'
+  lore:
+  - '&7Click to assign dragon artefact'
+  flags:
+  - HIDE_ATTRIBUTES
 traderCraftingScheme:
   5:
     material: REDSTONE_BLOCK
@@ -56,6 +83,14 @@ upgraderItem:
   flags:
   - HIDE_ATTRIBUTES
 oceanArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&9Ocean Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   abilityRadius: 6.0
   damage: 6.0
@@ -66,6 +101,14 @@ oceanArtefactConfig:
   waterDamage: 14.0
   upgradedEffectRadius: 4.0
 fireArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&cFire Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   abilityRadius: 3.0
   # How long the fire will last on the targets (in ticks, 20 ticks = 1 second)
@@ -75,17 +118,43 @@ fireArtefactConfig:
   # 12 is 6 hearts
   fireballDamage: 12.0
 thunderArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&6Thunder Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   abilityRadius: 5.0
   abilityDelayBetween: 1s
   abilityTimes: 5
 earthArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&2Earth Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   abilityRadius: 5.0
   upgradedAbilityCooldown: 1m30s
   upgradedAbilityRadius: 5.0
   damage: 5.0
 airArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&bArtefact of Air'
+    lore:
+    - '&7This artefact allows you to'
+    - '&7dash in the air, dealing damage'
+    - '&7to enemies in your path.'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   dashDistance: 25.0
   # 4.0 is 2 hearts
@@ -98,6 +167,14 @@ airArtefactConfig:
   groundPoundDamage: 3.0
   groundPoundRadius: 5.0
 iceArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&bIce Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   spikeDamage: 5.0
   spikeCount: 5
@@ -106,19 +183,84 @@ iceArtefactConfig:
   upgradedAbilityRadius: 5.0
   # Duration in seconds for which players are frozen
   freezeDuration: 5
+lifeArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&4Life Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
+  abilityCooldown: 1m
+  upgradedAbilityCooldown: 1m30s
+  upgradedAbilityRadius: 3.0
+  # How many hearts should targets have after being affected by the upgraded life artefact ability.
+  upgradedAbilityHealthAmount: 7
+  upgradedAbilityHealthRestoreDuration: 20s
 sculkArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&bSculk Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   abilityRadius: 5.0
   abilityDamage: 10.0
   upgradedAbilityCooldown: 1m30s
 strengthArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&cStrength Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   upgradedAbilityCooldown: 1m30s
   upgradedAbilityWindow: 15s
   maxHits: 10
   perHitBuffDuration: 3s
 luckArtefactConfig:
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&2Luck Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES
   abilityCooldown: 45s
   upgradedAbilityCooldown: 1m30s
   upgradedAbilityRadius: 5.0
   upgradedAbilityEffectDuration: 30s
+dragonArtefactConfig:
+  # First ability
+  abilityCooldown: 10s
+  dragonBreathDuration: 10s
+  # Dragon breath damage in hearts
+  dragonBreathDamage: 2
+  # Dragon breath are will be created 5 blocks in looking direction of the player
+  dragonBreathLocationMultiplier: 5
+  secondAbilityCooldown: 4m
+  # 14 damage is 7 hearts
+  secondAbilitySmashDamage: 14.0
+  thirdAbilityCooldown: 1m30s
+  # 4 damage is 2 hearts
+  thirdAbilityDragonBreathDamage: 4.0
+  # In seconds
+  thirdAbilityDragonBreathDuration: 5
+  # 8.0 is 4 hearts
+  dragonFireballDamage: 8.0
+  item:
+    customModelData: 0
+    material: PAPER
+    name: '&dDragon Artefact'
+    lore:
+    - '&7lorem ipsum'
+    flags:
+    - HIDE_ATTRIBUTES

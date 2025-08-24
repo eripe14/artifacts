@@ -1,3 +1,4 @@
+reload: '&aConfiguration has been reloaded!'
 invalidUsage: '&4Wrong command usage &8>> &7{COMMAND}.'
 invalidUsageHeader: '&cWrong command usage!'
 invalidUsageEntry: '&8 >> &7{SCHEME}'
@@ -48,3 +49,33 @@ upgradedLuckAbility:
     {affected}!</gradient>
 artefactNotFound: '&cCannot find artefact with this id!'
 artefactSet: '&aYou have set &e{id} artefact &ato player &e{player}&a!'
+upgradedRequired: '&cThis ability requires an upgraded artefact to be used!'
+dragonUpgradedRequired: '&cThis ability requires that artefact is upgraded twice!'
+traderItemUsed: '&aYou have used a trader item, you have received &e{artefact} artefact!'
+upgraderItemUsed: '&aYou have used an upgrader item, your artefact has been upgraded!'
+artefactAlreadyUpgraded: '&cYour artefact is already upgraded!'
+dragonArtefactUpgraded: '&aYou have upgraded your dragon artefact, now you can use
+  3rd ability!'
+# Player joins for the first time and receive random artefact.
+artifactAssigned: '&aYou have received a new random &e{id} artefact&a!'
+abilityCooldown:
+  actionbar: <gradient:#ffffff:#ff0000>You have to wait {cooldown} before using this
+    ability again!</gradient>
+trustPlayer: '&aYou have marked &e{target} &aas trusted player!'
+untrustPlayer: '&cYou have unmarked &e{target} &cas trusted player!'
+dragonArtefactCrafted: '&aYou have crafted a &eDragon Artefact&a!'
+firstDragonAbility:
+  actionbar: <gradient:#cf87e5:#1a001c>You have used first dragon ability!</gradient>
+droppedDragonArtefact:
+- '&cYou have dropped your dragon artefact!'
+- '&cNow your artefact is set to previous one &e({artefact} artefact)&c!'
+pickedUpDragonArtefact:
+- '&aYou have picked up a dragon artefact!'
+- '&aNow your artefact is set to &e{artefact} artefact&a!'
+secondDragonAbility:
+  actionbar: <gradient:#cf87e5:#1a001c>You have used second dragon ability!</gradient>
+secondDragonAbilityLanding: '&c&lBOOM!'
+thirdDragonAbility:
+  actionbar: <gradient:#cf87e5:#1a001c>You have used third dragon ability!</gradient>
+traderItemCannotBeUsedWithDragonArtefact: '&cYou cannot use trader item with dragon
+  artefact!'

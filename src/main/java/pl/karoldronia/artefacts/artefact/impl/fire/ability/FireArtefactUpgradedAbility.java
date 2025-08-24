@@ -28,7 +28,14 @@ public class FireArtefactUpgradedAbility implements ChargingAbility, Listener {
         this.projectileKey = new NamespacedKey(plugin, "fireball_projectile");
         this.noticeService = noticeService;
 
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        if (plugin.isEnabled()) {
+            plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        }
+    }
+
+    @Override
+    public String getId() {
+        return "fire-upgraded";
     }
 
     @Override

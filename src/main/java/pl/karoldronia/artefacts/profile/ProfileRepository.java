@@ -28,6 +28,10 @@ public interface ProfileRepository extends DocumentRepository<UUID, Profile> {
             profile.setAbilitiesCooldowns(new HashMap<>());
         }
 
+        if (profile.getPreviousArtefactId() == null) {
+            profile.setPreviousArtefactId(StringUtil.EMPTY);
+        }
+
         return profile;
     }
 

@@ -1,9 +1,16 @@
 package pl.karoldronia.artefacts.artefact;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
+import pl.karoldronia.artefacts.artefact.item.ArtefactItemsUtil;
+import pl.karoldronia.artefacts.profile.Profile;
 import pl.karoldronia.artefacts.profile.ProfileRepository;
+import pl.karoldronia.artefacts.scheduler.Scheduler;
 
+import java.time.Duration;
 import java.util.*;
 
 public class ArtefactService {

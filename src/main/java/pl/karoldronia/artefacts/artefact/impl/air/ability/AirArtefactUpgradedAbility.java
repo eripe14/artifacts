@@ -35,6 +35,11 @@ public class AirArtefactUpgradedAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "air-upgraded";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         Location originalLocation = player.getLocation().clone();
         this.performMultipleDashes(player, profile, originalLocation);

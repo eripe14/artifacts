@@ -31,6 +31,11 @@ public class OceanArtefactUpgradedAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "ocean-upgraded";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         Location playerLocation = player.getLocation();
         boolean inWater = this.isInWater(playerLocation);

@@ -21,6 +21,11 @@ public class LifeArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "life";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
         player.setHealth(maxHealth);

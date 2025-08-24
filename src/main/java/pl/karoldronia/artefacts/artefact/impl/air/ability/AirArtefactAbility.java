@@ -25,6 +25,11 @@ public class AirArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "air";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         Vector direction = player.getLocation().getDirection().normalize();
         Location startLocation = player.getLocation();

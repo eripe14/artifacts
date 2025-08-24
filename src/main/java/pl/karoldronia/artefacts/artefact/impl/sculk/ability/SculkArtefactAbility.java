@@ -32,6 +32,11 @@ public class SculkArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "sculk";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         List<Player> targets = this.getTargets(player, profile, this.artefactConfig.abilityRadius);
 

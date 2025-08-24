@@ -31,6 +31,11 @@ public class IceArtefactUpgradedAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "ice-upgraded";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         List<Player> freezeTargets = getTargets(player, profile, this.artefactConfig.upgradedAbilityRadius);
         this.createFreezeZone(player, freezeTargets);

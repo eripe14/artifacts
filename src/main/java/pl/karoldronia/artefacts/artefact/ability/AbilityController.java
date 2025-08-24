@@ -12,12 +12,15 @@ import pl.karoldronia.artefacts.artefact.ArtefactService;
 import pl.karoldronia.artefacts.artefact.ability.charging.ChargingAbility;
 import pl.karoldronia.artefacts.artefact.ability.charging.ChargingSession;
 import pl.karoldronia.artefacts.artefact.impl.air.AirArtefact;
+import pl.karoldronia.artefacts.artefact.impl.dragon.DragonArtefact;
 import pl.karoldronia.artefacts.artefact.impl.ice.IceArtefact;
 import pl.karoldronia.artefacts.artefact.impl.ocean.OceanArtefact;
 import pl.karoldronia.artefacts.artefact.impl.sculk.SculkArtefact;
+import pl.karoldronia.artefacts.artefact.item.ArtefactItemsUtil;
 import pl.karoldronia.artefacts.notice.NoticeService;
 import pl.karoldronia.artefacts.profile.Profile;
 import pl.karoldronia.artefacts.profile.ProfileRepository;
+import pl.karoldronia.artefacts.util.DurationUtil;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -42,26 +45,6 @@ public class AbilityController implements Listener {
     }
 
     @EventHandler
-    void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        Profile profile = this.profileRepository.findOrCreate(player);
-
-        this.artefactService.findArtefact(profile.getArtefactId()).ifPresent(artefact -> {
-            artefact.givePassiveEffects(player);
-        });
-    }
-
-    @EventHandler
-    void onPlayerRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        Profile profile = this.profileRepository.findOrCreate(player);
-
-        this.artefactService.findArtefact(profile.getArtefactId()).ifPresent(artefact -> {
-            artefact.givePassiveEffects(player);
-        });
-    }
-
-    @EventHandler
     void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Profile profile = this.profileRepository.findOrCreate(player);
@@ -74,7 +57,15 @@ public class AbilityController implements Listener {
             return;
         }
 
+        if (!ArtefactItemsUtil.isHoldingArtefact(profile.getArtefactId(), player)) {
+            return;
+        }
+
         this.artefactService.findArtefact(profile.getArtefactId()).ifPresent(artefact -> {
+            if (artefact.getId().equalsIgnoreCase(DragonArtefact.ID)) {
+                return;
+            }
+
             List<Ability> abilities = artefact.getAbilities();
 
             if (abilities.isEmpty()) {
@@ -91,6 +82,16 @@ public class AbilityController implements Listener {
                 return;
             }
 
+            if (profile.hasCooldown(ability)) {
+                Duration abilityCooldown = profile.getAbilityCooldown(ability.getId());
+                this.noticeService.create()
+                        .notice(messages -> messages.abilityCooldown)
+                        .player(player.getUniqueId())
+                        .placeholder("{cooldown}", DurationUtil.format(abilityCooldown))
+                        .send();
+                return;
+            }
+
             if (ability.requireUpgrade() && !profile.isUpgraded()) {
                 this.noticeService.create()
                         .notice(messages -> messages.upgradedRequired)
@@ -99,6 +100,7 @@ public class AbilityController implements Listener {
                 return;
             }
 
+            profile.setAbilityCooldown(ability.getId(), ability.getCooldown());
             if (ability instanceof ChargingAbility chargingAbility) {
                 this.startCharging(player, profile, chargingAbility);
                 return;

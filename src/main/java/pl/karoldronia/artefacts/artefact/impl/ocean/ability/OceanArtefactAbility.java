@@ -25,6 +25,11 @@ public class OceanArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "ocean";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         Location center = player.getLocation();
         World world = player.getWorld();

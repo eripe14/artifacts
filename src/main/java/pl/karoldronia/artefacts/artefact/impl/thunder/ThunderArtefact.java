@@ -8,6 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 import pl.karoldronia.artefacts.artefact.Artefact;
 import pl.karoldronia.artefacts.artefact.ability.Ability;
 import pl.karoldronia.artefacts.artefact.impl.thunder.ability.ThunderArtefactAbility;
+import pl.karoldronia.artefacts.artefact.item.ArtefactItem;
 import pl.karoldronia.artefacts.notice.NoticeService;
 import pl.karoldronia.artefacts.profile.ProfileRepository;
 import pl.karoldronia.artefacts.scheduler.Scheduler;
@@ -34,7 +35,12 @@ public class ThunderArtefact implements Artefact {
     }
 
     @Override
-    public void givePassiveEffects(Player player) {
+    public ArtefactItem getArtefactItem() {
+        return this.artefactConfig.item;
+    }
+
+    @Override
+    public List<PotionEffectType> givePassiveEffects(Player player) {
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.SPEED,
                 Integer.MAX_VALUE,
@@ -51,6 +57,7 @@ public class ThunderArtefact implements Artefact {
                 true,
                 true
         ));
+        return List.of(PotionEffectType.SPEED, PotionEffectType.FIRE_RESISTANCE);
     }
 
     @Override

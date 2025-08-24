@@ -22,6 +22,11 @@ public class StrengthArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "strength";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.STRENGTH,

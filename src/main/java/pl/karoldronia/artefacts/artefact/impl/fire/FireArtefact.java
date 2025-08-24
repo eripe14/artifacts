@@ -3,10 +3,13 @@ package pl.karoldronia.artefacts.artefact.impl.fire;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import pl.karoldronia.artefacts.artefact.Artefact;
 import pl.karoldronia.artefacts.artefact.ability.Ability;
 import pl.karoldronia.artefacts.artefact.impl.fire.ability.FireArtefactAbility;
 import pl.karoldronia.artefacts.artefact.impl.fire.ability.FireArtefactUpgradedAbility;
+import pl.karoldronia.artefacts.artefact.item.ArtefactItem;
 import pl.karoldronia.artefacts.notice.NoticeService;
 import pl.karoldronia.artefacts.profile.ProfileRepository;
 
@@ -32,8 +35,21 @@ public class FireArtefact implements Artefact {
     }
 
     @Override
-    public void givePassiveEffects(Player player) {
+    public ArtefactItem getArtefactItem() {
+        return this.artefactConfig.item;
+    }
 
+    @Override
+    public List<PotionEffectType> givePassiveEffects(Player player) {
+        player.addPotionEffect(new PotionEffect(
+                PotionEffectType.FIRE_RESISTANCE,
+                Integer.MAX_VALUE,
+                0,
+                false,
+                true,
+                true
+        ));
+        return List.of(PotionEffectType.FIRE_RESISTANCE);
     }
 
     @Override

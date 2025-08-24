@@ -23,6 +23,11 @@ public class FireArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "fire";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         double abilityRadius = this.artefactConfig.abilityRadius;
         List<Player> nearbyTargets = this.getTargets(player, profile, abilityRadius);

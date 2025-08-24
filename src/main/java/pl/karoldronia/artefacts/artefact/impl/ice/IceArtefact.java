@@ -9,6 +9,7 @@ import pl.karoldronia.artefacts.artefact.Artefact;
 import pl.karoldronia.artefacts.artefact.ability.Ability;
 import pl.karoldronia.artefacts.artefact.impl.ice.ability.IceArtefactAbility;
 import pl.karoldronia.artefacts.artefact.impl.ice.ability.IceArtefactUpgradedAbility;
+import pl.karoldronia.artefacts.artefact.item.ArtefactItem;
 import pl.karoldronia.artefacts.notice.NoticeService;
 import pl.karoldronia.artefacts.profile.ProfileRepository;
 
@@ -34,7 +35,12 @@ public class IceArtefact implements Artefact {
     }
 
     @Override
-    public void givePassiveEffects(Player player) {
+    public ArtefactItem getArtefactItem() {
+        return this.artefactConfig.item;
+    }
+
+    @Override
+    public List<PotionEffectType> givePassiveEffects(Player player) {
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.HASTE,
                 Integer.MAX_VALUE,
@@ -51,6 +57,7 @@ public class IceArtefact implements Artefact {
                 true,
                 true
         ));
+        return List.of(PotionEffectType.SPEED, PotionEffectType.HASTE);
     }
 
     @Override

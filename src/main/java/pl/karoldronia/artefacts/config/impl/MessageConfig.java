@@ -2,8 +2,11 @@ package pl.karoldronia.artefacts.config.impl;
 
 import com.eternalcode.multification.notice.Notice;
 import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.annotation.Comment;
 
 public class MessageConfig extends OkaeriConfig {
+
+    public Notice reload = Notice.chat("&aConfiguration has been reloaded!");
 
     public Notice invalidUsage = Notice.chat("&4Wrong command usage &8>> &7{COMMAND}.");
 
@@ -109,8 +112,75 @@ public class MessageConfig extends OkaeriConfig {
             "&cThis ability requires an upgraded artefact to be used!"
     );
 
+    public Notice dragonUpgradedRequired = Notice.chat(
+            "&cThis ability requires that artefact is upgraded twice!"
+    );
+
     public Notice traderItemUsed = Notice.chat(
             "&aYou have used a trader item, you have received &e{artefact} artefact!"
+    );
+
+    public Notice upgraderItemUsed = Notice.chat(
+            "&aYou have used an upgrader item, your artefact has been upgraded!"
+    );
+
+    public Notice artefactAlreadyUpgraded = Notice.chat(
+            "&cYour artefact is already upgraded!"
+    );
+
+    public Notice dragonArtefactUpgraded = Notice.chat(
+            "&aYou have upgraded your dragon artefact, now you can use 3rd ability!"
+    );
+
+    @Comment("Player joins for the first time and receive random artefact.")
+    public Notice artifactAssigned = Notice.chat(
+            "&aYou have received a new random &e{id} artefact&a!"
+    );
+
+    public Notice abilityCooldown = Notice.actionbar(
+            "<gradient:#ffffff:#ff0000>You have to wait {cooldown} before using this ability again!</gradient>"
+    );
+
+    public Notice trustPlayer = Notice.chat(
+            "&aYou have marked &e{target} &aas trusted player!"
+    );
+
+    public Notice untrustPlayer = Notice.chat(
+            "&cYou have unmarked &e{target} &cas trusted player!"
+    );
+
+    public Notice dragonArtefactCrafted = Notice.chat(
+            "&aYou have crafted a &eDragon Artefact&a!"
+    );
+
+    public Notice firstDragonAbility = Notice.actionbar(
+            "<gradient:#cf87e5:#1a001c>You have used first dragon ability!</gradient>"
+    );
+
+    public Notice droppedDragonArtefact = Notice.chat(
+            "&cYou have dropped your dragon artefact!",
+            "&cNow your artefact is set to previous one &e({artefact} artefact)&c!"
+    );
+
+    public Notice pickedUpDragonArtefact = Notice.chat(
+            "&aYou have picked up a dragon artefact!",
+            "&aNow your artefact is set to &e{artefact} artefact&a!"
+    );
+
+    public Notice secondDragonAbility = Notice.actionbar(
+            "<gradient:#cf87e5:#1a001c>You have used second dragon ability!</gradient>"
+    );
+
+    public Notice secondDragonAbilityLanding = Notice.chat(
+            "&c&lBOOM!"
+    );
+
+    public Notice thirdDragonAbility = Notice.actionbar(
+            "<gradient:#cf87e5:#1a001c>You have used third dragon ability!</gradient>"
+    );
+
+    public Notice traderItemCannotBeUsedWithDragonArtefact = Notice.chat(
+            "&cYou cannot use trader item with dragon artefact!"
     );
 
 }

@@ -60,7 +60,14 @@ public class LuckArtefactUpgradedAbility implements Ability, Listener {
                 .expirationPolicy(ExpirationPolicy.CREATED)
                 .build();
 
-        this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        if (this.plugin.isEnabled()) {
+            this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        }
+    }
+
+    @Override
+    public String getId() {
+        return "luck-upgraded";
     }
 
     @Override

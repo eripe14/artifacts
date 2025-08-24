@@ -31,6 +31,11 @@ public class EarthArtefactUpgradedAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "earth-upgraded";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         List<Player> targets = this.getTargets(player, profile, this.artefactConfig.upgradedAbilityRadius);
         for (Player target : targets) {

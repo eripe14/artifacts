@@ -36,6 +36,11 @@ public class LuckArtefactAbility implements Ability {
     }
 
     @Override
+    public String getId() {
+        return "luck";
+    }
+
+    @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         PotionEffectType randomEffect = this.getRandomEffect();
         player.addPotionEffect(new PotionEffect(
