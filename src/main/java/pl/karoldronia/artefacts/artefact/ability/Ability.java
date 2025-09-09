@@ -32,7 +32,7 @@ public interface Ability {
     }
 
     default AbilityTrigger getTrigger() {
-        return this.requireUpgrade() ? AbilityTrigger.SNEAK_LEFT_CLICK : AbilityTrigger.LEFT_CLICK;
+        return this.requireUpgrade() ? AbilityTrigger.RPM_SHIFT : AbilityTrigger.RPM;
     }
 
 }

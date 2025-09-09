@@ -1,5 +1,6 @@
 package pl.karoldronia.artefacts.artefact.impl.fire.ability;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -33,16 +34,16 @@ public class FireArtefactAbility implements Ability {
         List<Player> nearbyTargets = this.getTargets(player, profile, abilityRadius);
 
         for (Player nearbyTarget : nearbyTargets) {
-            PotionEffect potionEffect = nearbyTarget.getPotionEffect(PotionEffectType.FIRE_RESISTANCE);
-            if (potionEffect != null) {
-                nearbyTarget.removePotionEffect(PotionEffectType.FIRE_RESISTANCE);
-            }
-
+            double fireDamage = this.artefactConfig.abilityFireDamage;
+            nearbyTarget.damage(fireDamage, player);
             nearbyTarget.setFireTicks(this.artefactConfig.abilityFireTicks);
 
-            if (potionEffect != null) {
-                nearbyTarget.addPotionEffect(potionEffect);
-            }
+            nearbyTarget.getWorld().playSound(
+                    nearbyTarget.getLocation(),
+                    Sound.ENTITY_PLAYER_HURT_ON_FIRE,
+                    1.0f,
+                    1.0f
+            );
         }
 
         this.noticeService.create()

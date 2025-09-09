@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
+import pl.karoldronia.artefacts.artefact.impl.dragon.DragonArtefact;
 import pl.karoldronia.artefacts.artefact.item.ArtefactItemsUtil;
 import pl.karoldronia.artefacts.profile.Profile;
 import pl.karoldronia.artefacts.profile.ProfileRepository;
@@ -37,6 +38,10 @@ public class ArtefactService {
 
     public Artefact getRandomArtefact(@Nullable Artefact previous) {
         List<Artefact> availableArtefacts = new ArrayList<>(this.artefacts.values());
+        Optional<Artefact> dragon = availableArtefacts.stream()
+                .filter(artefact -> artefact.getId().equalsIgnoreCase(DragonArtefact.ID))
+                .findFirst();
+        dragon.ifPresent(availableArtefacts::remove);
 
         if (previous != null) {
             availableArtefacts.remove(previous);

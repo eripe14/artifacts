@@ -5,18 +5,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
 import pl.karoldronia.artefacts.artefact.ArtefactService;
 import pl.karoldronia.artefacts.artefact.ability.charging.ChargingAbility;
 import pl.karoldronia.artefacts.artefact.ability.charging.ChargingSession;
-import pl.karoldronia.artefacts.artefact.impl.air.AirArtefact;
 import pl.karoldronia.artefacts.artefact.impl.dragon.DragonArtefact;
-import pl.karoldronia.artefacts.artefact.impl.ice.IceArtefact;
-import pl.karoldronia.artefacts.artefact.impl.ocean.OceanArtefact;
-import pl.karoldronia.artefacts.artefact.impl.sculk.SculkArtefact;
 import pl.karoldronia.artefacts.artefact.item.ArtefactItemsUtil;
+import pl.karoldronia.artefacts.artefact.protect.ArtefactProtectService;
 import pl.karoldronia.artefacts.notice.NoticeService;
 import pl.karoldronia.artefacts.profile.Profile;
 import pl.karoldronia.artefacts.profile.ProfileRepository;
@@ -34,14 +29,16 @@ public class AbilityController implements Listener {
     private final ProfileRepository profileRepository;
     private final ArtefactService artefactService;
     private final NoticeService noticeService;
+    private final ArtefactProtectService protectService;
 
     private final Map<UUID, ChargingSession> chargingSessions = new HashMap<>();
 
-    public AbilityController(Plugin plugin, ProfileRepository profileRepository, ArtefactService artefactService, NoticeService noticeService) {
+    public AbilityController(Plugin plugin, ProfileRepository profileRepository, ArtefactService artefactService, NoticeService noticeService, ArtefactProtectService protectService) {
         this.plugin = plugin;
         this.profileRepository = profileRepository;
         this.artefactService = artefactService;
         this.noticeService = noticeService;
+        this.protectService = protectService;
     }
 
     @EventHandler
@@ -52,7 +49,7 @@ public class AbilityController implements Listener {
         Action action = event.getAction();
         boolean sneaking = player.isSneaking();
 
-        if (action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK) {
+        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) {
             this.stopCharging(player.getUniqueId());
             return;
         }
@@ -62,6 +59,14 @@ public class AbilityController implements Listener {
         }
 
         this.artefactService.findArtefact(profile.getArtefactId()).ifPresent(artefact -> {
+            if (this.protectService.isInProtect(player.getLocation())) {
+                this.noticeService.create()
+                        .notice(messages -> messages.cannotUseArtefactInProtectZone)
+                        .player(player.getUniqueId())
+                        .send();
+                return;
+            }
+
             if (artefact.getId().equalsIgnoreCase(DragonArtefact.ID)) {
                 return;
             }
@@ -72,7 +77,7 @@ public class AbilityController implements Listener {
                 return;
             }
 
-            AbilityTrigger trigger = sneaking ? AbilityTrigger.SNEAK_LEFT_CLICK : AbilityTrigger.LEFT_CLICK;
+            AbilityTrigger trigger = sneaking ? AbilityTrigger.RPM_SHIFT : AbilityTrigger.RPM;
             Ability ability = abilities.stream()
                     .filter(a -> a.getTrigger() == trigger)
                     .findFirst()

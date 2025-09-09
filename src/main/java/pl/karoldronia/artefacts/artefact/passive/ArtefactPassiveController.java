@@ -150,6 +150,7 @@ public class ArtefactPassiveController implements Listener {
                 return;
             }
 
+
             // Natychmiastowe sprawdzenie po drop
             this.scheduler.laterSync(() -> {
                 passiveManager.invalidatePlayerCache(player.getUniqueId());

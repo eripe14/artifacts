@@ -1,6 +1,5 @@
 package pl.karoldronia.artefacts.artefact.impl.dragon.ability;
 
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -145,7 +144,7 @@ public class SecondDragonArtefactAbility implements DragonAbility, Listener {
 
     @Override
     public DragonAbilityTrigger getDragonTrigger() {
-        return DragonAbilityTrigger.LPM_SHIFT;
+        return DragonAbilityTrigger.RPM_SHIFT;
     }
 
 }

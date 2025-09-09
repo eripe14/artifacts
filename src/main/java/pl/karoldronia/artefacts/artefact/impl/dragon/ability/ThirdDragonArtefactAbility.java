@@ -50,7 +50,7 @@ public class ThirdDragonArtefactAbility implements DragonAbility, Listener {
 
     @Override
     public DragonAbilityTrigger getDragonTrigger() {
-        return DragonAbilityTrigger.PPM;
+        return DragonAbilityTrigger.LPM_SHIFT;
     }
 
     @Override

@@ -216,7 +216,7 @@ public class FirstDragonArtefactAbility implements DragonAbility {
 
     @Override
     public DragonAbilityTrigger getDragonTrigger() {
-        return DragonAbilityTrigger.LPM;
+        return DragonAbilityTrigger.RPM;
     }
 
     @Override

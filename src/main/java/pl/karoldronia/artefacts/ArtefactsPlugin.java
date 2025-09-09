@@ -30,6 +30,8 @@ import pl.karoldronia.artefacts.artefact.impl.thunder.ThunderArtefact;
 import pl.karoldronia.artefacts.artefact.item.ArtefactItemController;
 import pl.karoldronia.artefacts.artefact.passive.ArtefactPassiveController;
 import pl.karoldronia.artefacts.artefact.passive.ArtefactPassiveService;
+import pl.karoldronia.artefacts.artefact.protect.ArtefactProtectRepository;
+import pl.karoldronia.artefacts.artefact.protect.ArtefactProtectService;
 import pl.karoldronia.artefacts.command.InvalidUsageHandlerImpl;
 import pl.karoldronia.artefacts.command.MissingPermissionHandlerImpl;
 import pl.karoldronia.artefacts.config.ConfigService;
@@ -43,6 +45,8 @@ import pl.karoldronia.artefacts.profile.ProfileRepository;
 import pl.karoldronia.artefacts.profile.TrustCommand;
 import pl.karoldronia.artefacts.scheduler.BukkitSchedulerImpl;
 import pl.karoldronia.artefacts.scheduler.Scheduler;
+
+import java.io.IOException;
 
 public class ArtefactsPlugin extends JavaPlugin {
 
@@ -63,6 +67,9 @@ public class ArtefactsPlugin extends JavaPlugin {
 
     private ArtefactService artefactService;
     private ArtefactPassiveService artefactPassiveService;
+
+    private ArtefactProtectRepository artefactProtectRepository;
+    private ArtefactProtectService artefactProtectService;
 
     private CraftingService craftingService;
 
@@ -96,11 +103,18 @@ public class ArtefactsPlugin extends JavaPlugin {
         this.artefactService = new ArtefactService(this, this.profileRepository);
         this.artefactPassiveService = new ArtefactPassiveService(this.scheduler, this.artefactService, this.profileRepository);
 
+        PersistenceCollection protectsCollection = PersistenceCollection.of(ArtefactProtectRepository.class);
+        this.documentPersistence.registerCollection(protectsCollection);
+        this.artefactProtectRepository = RepositoryDeclaration.of(ArtefactProtectRepository.class)
+                .newProxy(this.documentPersistence, protectsCollection, this.getClass().getClassLoader());
+
+        this.artefactProtectService = new ArtefactProtectService(this.artefactProtectRepository);
+
         this.setupArtefacts();
         this.artefactPassiveService.passiveEffects();
 
         server.getPluginManager().registerEvents(
-                new AbilityController(this, this.profileRepository, this.artefactService, this.noticeService),
+                new AbilityController(this, this.profileRepository, this.artefactService, this.noticeService, this.artefactProtectService),
                 this
         );
         server.getPluginManager().registerEvents(
@@ -145,6 +159,14 @@ public class ArtefactsPlugin extends JavaPlugin {
 
         if (this.craftingService != null) {
             this.craftingService.unregister();
+        }
+
+        if (this.documentPersistence != null) {
+            try {
+                this.documentPersistence.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -191,7 +213,8 @@ public class ArtefactsPlugin extends JavaPlugin {
                                 this.noticeService,
                                 this.messageConfig,
                                 this.pluginConfig,
-                                this.craftingService
+                                this.craftingService,
+                                this.artefactProtectService
                         ),
                         new TrustCommand(this.profileRepository, this.noticeService)
                 )

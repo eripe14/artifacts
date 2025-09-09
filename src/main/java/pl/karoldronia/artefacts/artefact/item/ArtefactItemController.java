@@ -68,18 +68,28 @@ public class ArtefactItemController implements Listener {
                 return;
             }
 
+            ArtefactItemsUtil.removeOldArtefactItem(artefactId, player);
             Artefact randomArtefact = this.artefactService.getRandomArtefact(artefactOptional.orElse(null));
-            profile.setArtefactId(randomArtefact.getId());
+            String randomArtefactId = randomArtefact.getId();
 
+            profile.setArtefactId(randomArtefactId);
+
+            ItemStack randomArtefactItem = randomArtefact.getArtefactItem().build(randomArtefactId);
+
+            player.clearActivePotionEffects();
             randomArtefact.givePassiveEffects(player);
+
             item.setAmount(item.getAmount() - 1);
+            player.getInventory().addItem(randomArtefactItem);
+            player.updateInventory();
 
             this.noticeService.create()
                     .player(uniqueId)
                     .notice(messages -> messages.traderItemUsed)
-                    .placeholder("{artefact}", randomArtefact.getId())
+                    .placeholder("{artefact}", randomArtefactId)
                     .send();
 
+            profile.save();
             this.profileRepository.save(profile);
             return;
         }

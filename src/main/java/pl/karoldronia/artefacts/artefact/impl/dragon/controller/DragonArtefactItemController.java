@@ -46,6 +46,10 @@ public class DragonArtefactItemController implements Listener {
         });
 
         this.artefactService.findArtefact(profile.getArtefactId()).ifPresent(artefact -> {
+            if (artefact.getId().equals(DragonArtefact.ID)) {
+                return;
+            }
+
             ItemStack previousArtefactItem = artefact.getArtefactItem().build(artefact.getId());
             player.getInventory().addItem(previousArtefactItem);
 

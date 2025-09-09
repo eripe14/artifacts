@@ -1,11 +1,14 @@
 package pl.karoldronia.artefacts.artefact.impl.fire.ability;
 
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
@@ -16,6 +19,7 @@ import pl.karoldronia.artefacts.notice.NoticeService;
 import pl.karoldronia.artefacts.profile.Profile;
 
 import java.time.Duration;
+import java.util.Collection;
 
 public class FireArtefactUpgradedAbility implements ChargingAbility, Listener {
 
@@ -80,5 +84,46 @@ public class FireArtefactUpgradedAbility implements ChargingAbility, Listener {
         if (tag == null || tag != (byte) 1) return;
 
         event.setDamage(this.artefactConfig.fireballDamage);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    void onProjectileHit(ProjectileHitEvent event) {
+        if (!(event.getEntity() instanceof SmallFireball fireball)) return;
+
+        Byte tag = fireball.getPersistentDataContainer().get(this.projectileKey, PersistentDataType.BYTE);
+        if (tag == null || tag != (byte) 1) return;
+
+        Location hitLocation = fireball.getLocation();
+
+        // Get the shooter for damage attribution
+        Entity shooter = (Entity) fireball.getShooter();
+        if (!(shooter instanceof Player shooterPlayer)) return;
+
+        Collection<Entity> nearbyEntities = hitLocation.getWorld().getNearbyEntities(
+                hitLocation, 3.0, 3.0, 3.0
+        );
+
+        for (Entity entity : nearbyEntities) {
+            if (!(entity instanceof Player target)) continue;
+            if (target.equals(shooterPlayer)) continue; // Don't damage the shooter
+
+            double distance = hitLocation.distance(target.getLocation());
+            if (distance > 3.0) continue;
+
+            // Calculate damage based on distance (closer = more damage)
+            double damageMultiplier = Math.max(0.3, 1.0 - (distance / 3.0)); // 30% minimum damage
+            double splashDamage = this.artefactConfig.fireballDamage * damageMultiplier;
+
+            // Apply damage
+            target.damage(splashDamage, shooterPlayer);
+
+            // Set fire ticks for splash targets
+            if (this.artefactConfig.abilityFireTicks > 0) {
+                target.setFireTicks(this.artefactConfig.abilityFireTicks);
+            }
+        }
+
+        hitLocation.getWorld().createExplosion(hitLocation, 0.0f, false, false);
+        hitLocation.getWorld().playSound(hitLocation, org.bukkit.Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
     }
 }

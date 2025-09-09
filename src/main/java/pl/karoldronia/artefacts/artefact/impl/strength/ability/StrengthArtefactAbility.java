@@ -30,7 +30,7 @@ public class StrengthArtefactAbility implements Ability {
     public AbilityResult performAbility(Player player, Profile profile) {
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.STRENGTH,
-                Integer.MAX_VALUE,
+                Math.round((float) this.artefactConfig.abilityDuration.toMillis() / 50),
                 2,
                 false,
                 true,

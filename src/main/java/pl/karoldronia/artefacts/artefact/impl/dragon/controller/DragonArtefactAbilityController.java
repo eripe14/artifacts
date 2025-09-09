@@ -76,7 +76,7 @@ public class DragonArtefactAbilityController implements Listener {
                 }
 
                 DragonAbilityTrigger trigger = dragonAbility.getDragonTrigger();
-                if (trigger == DragonAbilityTrigger.LPM_SHIFT && !profile.isUpgraded()) {
+                if (trigger == DragonAbilityTrigger.RPM_SHIFT && !profile.isUpgraded()) {
                     this.noticeService.create()
                             .notice(messages -> messages.upgradedRequired)
                             .player(player.getUniqueId())
@@ -84,7 +84,7 @@ public class DragonArtefactAbilityController implements Listener {
                     return;
                 }
 
-                if (trigger == DragonAbilityTrigger.PPM && !profile.isDragonUpgraded()) {
+                if (trigger == DragonAbilityTrigger.LPM_SHIFT && !profile.isDragonUpgraded()) {
                     this.noticeService.create()
                             .notice(messages -> messages.dragonUpgradedRequired)
                             .player(player.getUniqueId())
@@ -101,12 +101,16 @@ public class DragonArtefactAbilityController implements Listener {
     private DragonAbilityTrigger getTrigger(Player player, Action action) {
         boolean sneaking = player.isSneaking();
 
-        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
-            return sneaking ? DragonAbilityTrigger.LPM_SHIFT : DragonAbilityTrigger.LPM;
+        if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+            return sneaking ? DragonAbilityTrigger.RPM_SHIFT : DragonAbilityTrigger.RPM;
         }
 
-        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            return DragonAbilityTrigger.PPM;
+        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+            if (!sneaking) {
+                return null;
+            }
+
+            return DragonAbilityTrigger.LPM_SHIFT;
         }
         return null;
     }

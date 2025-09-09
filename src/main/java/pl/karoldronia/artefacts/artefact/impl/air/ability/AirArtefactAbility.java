@@ -1,6 +1,7 @@
 package pl.karoldronia.artefacts.artefact.impl.air.ability;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -32,8 +33,13 @@ public class AirArtefactAbility implements Ability {
     @Override
     public AbilityResult performAbility(Player player, Profile profile) {
         Vector direction = player.getLocation().getDirection().normalize();
-        Location startLocation = player.getLocation();
-        Location endLocation = this.findSafeLocation(startLocation.clone().add(direction.multiply(this.artefactConfig.dashDistance)));
+        Location startLocation = player.getLocation().add(0, 0.5, 0); // Dodajemy trochę wysokości żeby nie sprawdzać bloku pod nogami
+
+        Location endLocation = this.findMaximumSafeDashLocation(startLocation, direction);
+
+        if (startLocation.distance(endLocation) < 1.0) {
+            return AbilityResult.SUCCESS;
+        }
 
         List<Player> targets = this.getTargetsInPath(player, profile, startLocation, endLocation);
         for (Player target : targets) {
@@ -55,7 +61,7 @@ public class AirArtefactAbility implements Ability {
                 .notice(messages -> messages.airAbility)
                 .player(player.getUniqueId())
                 .placeholder("{targets}", String.valueOf(targets.size()))
-                .placeholder("{distance}", String.valueOf(this.artefactConfig.dashDistance))
+                .placeholder("{distance}", String.valueOf((int) startLocation.distance(endLocation)))
                 .send();
 
         return AbilityResult.SUCCESS;
@@ -66,15 +72,47 @@ public class AirArtefactAbility implements Ability {
         return this.artefactConfig.abilityCooldown;
     }
 
-    private Location findSafeLocation(Location location) {
-        while (location.getBlock().getType().isSolid() && location.getY() < 256) {
-            location.add(0, 1, 0);
+
+    private Location findMaximumSafeDashLocation(Location start, Vector direction) {
+        Location current = start.clone();
+        Location lastSafe = start.clone();
+        double stepSize = 0.25;
+        double maxDistance = this.artefactConfig.dashDistance;
+
+        for (double distance = stepSize; distance <= maxDistance; distance += stepSize) {
+            current = start.clone().add(direction.clone().multiply(distance));
+            if (isLocationSafe(current)) {
+                lastSafe = current.clone();
+            } else {
+                break;
+            }
         }
-        return location;
+
+        return lastSafe;
+    }
+
+    private boolean isLocationSafe(Location location) {
+        if (location.getBlock().getType().isSolid()) {
+            return false;
+        }
+
+        Location headLocation = location.clone().add(0, 1, 0);
+        if (headLocation.getBlock().getType().isSolid()) {
+            return false;
+        }
+
+        Location groundLocation = location.clone().add(0, -1, 0);
+        Material groundType = groundLocation.getBlock().getType();
+
+        if (groundType == Material.AIR || groundType == Material.VOID_AIR) {
+            return !(location.getY() < 5);
+        }
+
+        return true;
     }
 
     private List<Player> getTargetsInPath(Player player, Profile profile, Location start, Location end) {
-        double radius = 3.0; // 3 block radius around the path
+        double radius = 2.0;
 
         return player.getWorld().getPlayers().stream()
                 .filter(p -> !p.equals(player))
@@ -84,13 +122,11 @@ public class AirArtefactAbility implements Ability {
     }
 
     private boolean isInDashPath(Location start, Location end, Location point, double radius) {
-        // Check if point is within radius of the line from start to end
         Vector startToEnd = end.toVector().subtract(start.toVector());
         Vector startToPoint = point.toVector().subtract(start.toVector());
 
         double projectionLength = startToPoint.dot(startToEnd) / startToEnd.lengthSquared();
 
-        // Clamp projection to line segment
         projectionLength = Math.max(0, Math.min(1, projectionLength));
 
         Vector closestPoint = start.toVector().add(startToEnd.multiply(projectionLength));
@@ -100,7 +136,6 @@ public class AirArtefactAbility implements Ability {
     }
 
     private void createDashEffects(Location start, Location end) {
-        // Create particle trail
         Vector direction = end.toVector().subtract(start.toVector()).normalize();
         double distance = start.distance(end);
 

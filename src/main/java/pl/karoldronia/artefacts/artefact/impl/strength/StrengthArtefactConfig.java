@@ -20,6 +20,8 @@ public class StrengthArtefactConfig extends OkaeriConfig {
 
     public Duration abilityCooldown = Duration.ofSeconds(45);
 
+    public Duration abilityDuration = Duration.ofSeconds(5);
+
     public Duration upgradedAbilityCooldown = Duration.ofSeconds(90);
 
     public Duration upgradedAbilityWindow = Duration.ofSeconds(15);

@@ -28,6 +28,8 @@ public class FireArtefactConfig extends OkaeriConfig {
     @Comment("How long the fire will last on the targets (in ticks, 20 ticks = 1 second)")
     public int abilityFireTicks = 200;
 
+    public  double abilityFireDamage = 4.0;
+
     public Duration upgradedAbilityCooldown = Duration.ofSeconds(90);
 
     public Duration upgradedAbilityChargingDuration = Duration.ofSeconds(10);

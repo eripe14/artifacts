@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import pl.karoldronia.artefacts.ArtefactsPlugin;
 import pl.karoldronia.artefacts.artefact.impl.dragon.DragonArtefact;
 import pl.karoldronia.artefacts.artefact.item.ArtefactItemsUtil;
+import pl.karoldronia.artefacts.artefact.item.crafting.CraftingService;
 import pl.karoldronia.artefacts.notice.NoticeService;
 import pl.karoldronia.artefacts.profile.Profile;
 import pl.karoldronia.artefacts.profile.ProfileRepository;
@@ -81,16 +82,24 @@ public class ArtefactController implements Listener {
         while (iterator.hasNext()) {
             ItemStack item = iterator.next();
 
-            if (!this.isArtefactItem(item)) {
-                continue;
+            // Check if it's an artefact item
+            if (this.isArtefactItem(item)) {
+                ArtefactItemsUtil.getArtefactId(item).ifPresent(artefactId -> {
+                    // Only protect artefacts that are NOT Dragon Artefacts
+                    if (!artefactId.equalsIgnoreCase(DragonArtefact.ID)) {
+                        iterator.remove();
+                        protectedItems.add(item);
+                    }
+                    // Dragon Artefacts will drop naturally
+                });
             }
-
-            ArtefactItemsUtil.getArtefactId(item).ifPresent(artefactId -> {
-                if (!artefactId.equalsIgnoreCase(DragonArtefact.ID)) {
-                    iterator.remove();
-                    protectedItems.add(item);
-                }
-            });
+            // Check if it's an upgrader item
+            else if (this.isUpgraderItem(item)) {
+                // Let upgraders drop - don't remove from drops, don't add to protected items
+                // This means upgraders will drop naturally on death
+            }
+            // Trader items will be handled by existing logic (if you want them protected,
+            // you'd need to add similar logic as for artefacts)
         }
 
         if (protectedItems.isEmpty()) {
@@ -148,6 +157,34 @@ public class ArtefactController implements Listener {
         return dataContainer.has(ArtefactsPlugin.ARTEFACT_ITEM_KEY);
     }
 
+    private boolean isUpgraderItem(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) {
+            return false;
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return false;
+        }
+
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+        return dataContainer.has(CraftingService.UPGRADER_ITEM_KEY);
+    }
+
+    private boolean isTraderItem(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) {
+            return false;
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return false;
+        }
+
+        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+        return dataContainer.has(CraftingService.TRADER_ITEM_KEY);
+    }
+
     private void restoreProtectedItems(Player player, List<ItemStack> protectedItems) {
         PlayerInventory inventory = player.getInventory();
         List<ItemStack> couldntFit = new ArrayList<>();
@@ -167,5 +204,4 @@ public class ArtefactController implements Listener {
             }
         }
     }
-
 }

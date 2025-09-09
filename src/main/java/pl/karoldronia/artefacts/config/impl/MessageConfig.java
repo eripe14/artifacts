@@ -183,4 +183,12 @@ public class MessageConfig extends OkaeriConfig {
             "&cYou cannot use trader item with dragon artefact!"
     );
 
+    public Notice protectCreated = Notice.chat(
+            "&aYou have created a protect area for artefacts!"
+    );
+
+    public Notice cannotUseArtefactInProtectZone = Notice.chat(
+            "&cYou cannot use artefact abilities in this protected zone!"
+    );
+
 }
